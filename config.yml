@@ -1,0 +1,236 @@
+# Format
+# ======
+#
+#   WorldName:                  # Name of the world where the following rules apply:
+#
+#     [properties]              # Default properties for this world. (See the list below.)
+#
+#     commands[-on-enable]:     # Commands that are executed when MonsterMoon is being enabled.
+#     - say MonsterMoon is on!
+#     - tell Player1 Hello!
+#
+#     commands-on-disable:      # Commands that are executed when MonsterMoon is being disabled.
+#     - tell Player1 Bye!
+#     - say MonsterMoon is off!
+#
+#     day-begins: midnight      # Time when day is considered changed. (See values below.)
+#     day-order: universal      # In which order the following calendar days are applied. (See values below.)
+#
+#     calendar:                 # This world has the following calendar days:
+#
+#       Monday:                 # Name for this day
+#         [properties]          # Properties for this day. (See the list below.)
+#         commands:             # Commands that are executed on this day.
+#         - say It's Monday.
+#
+#       Tuesday:
+#         [properties]
+#         commands:
+#         - say It's Tuesday.
+#
+#       [...]
+#
+#
+# Note
+# ----
+#
+# You can create empty calendar days, but due to the YAML format each day must
+# have some content. Use something like the following to create days that
+# do not have any events:
+#
+#   calendar:
+#     Monday: void
+#     Tuesday: still nothing  # (It does not actually matter what is written here.)
+#     Wednesday: _
+#     Thursday:
+#       difficulty: hard
+#       spawn-monsters: true
+#
+# -----------------------------------------------------------------------------
+#
+# Possible [properties] are
+# =========================
+#
+#   difficulty:
+#     [Number]        # number in range [0..3]
+#     peaceful        # same as 0
+#     easy            # same as 1
+#     normal          # same as 2
+#     hard            # same as 3
+#     default         # use default value (for this world)
+#     server-default  # use default value (for this server)
+#     no-change       # preserve the current value
+#
+#   spawn-monsters:
+#   spawn-animals:
+#   pvp:
+#     true            # property is active
+#     false           # property is not active
+#     default         # use default value (for this world)
+#     server-default  # use default value (for this server)
+#     no-change       # preserve the current value
+#
+# These properties are set by per-world/per-day basis and will override
+# the values set in the 'server.properties' file.
+#
+#
+# Scope
+# -----
+#
+# If property is *not* defined for a calendar day, a world default value will be
+# used instead. For example:
+#
+#   SomeWorld:
+#     spawn-monsters: false      # Monsters do not usually spawn on SomeWorld
+#     calendar:
+#
+#       Monday:
+#         spawn-monsters: true   # Monsters will spawn on Monday
+#
+#       Tuesday: void            # Monsters will NOT spawn on Tuesday, because
+#                                # SomeWorld default is false
+#       Wednesday: void
+#
+# If you want properties to propagate you have to set either Tuesday or the
+# world default to 'no-change'. For example:
+#
+#   SomeWorld:
+#     spawn-monsters: no-change  # Leave values as-is (initially use server default)
+#     calendar:
+#
+#       Monday:
+#         spawn-monsters: true   # Monsters will spawn on Monday
+#
+#       Tuesday: void            # Monsters will spawn on Tuesday!
+#
+#       Wednesday: void
+#
+#
+# To randomize properties
+# -----------------------
+#
+# You can randomize properties by introducing multiple possible values on
+# the same line.
+#
+# Example:
+#   spawn-monsters: no-change no-change false  # There is 33.33% possibility
+#                                              # that monster spawning will cease.
+#
+# -----------------------------------------------------------------------------
+#
+# Possible values for 'day-begins' are
+# ====================================
+#
+#   day-begins:
+#     [Number]          # The actual time of day.
+#     midnight          # same as -6000
+#     sunrise           # same as 0
+#     midday            # same as 6000
+#     sunset            # same as 12000
+#
+# Example:
+#
+#   day-begins: 9000    # Day will change at 3 o'clock in the afternoon.
+#
+#
+# Technical details
+# -----------------
+#
+# Negative numbers are allowed because the actual time is calculated as a delta
+# to the world.getFullTime(). This means that numbers over 24000 are also allowed.
+#
+# Example:
+#
+#   day-begins: 6000
+#
+#   When Monday begins the time is:
+#     world.getFullTime() == 222000, world.getTime() == 6000
+#
+#   Tuesday is now scheduled to begin at:
+#     (222000 - (222000 % 24000) + 24000) + 6000 == 246000
+#                                           ^ 'day-begins' delta
+#
+# -----------------------------------------------------------------------------
+#
+# Possible values for 'day-order' are
+# ===================================
+#
+#   day-order:
+#     universal       # The next day will be determined from the global time
+#     linear          # First day of the calendar is always executed first
+#     random          # Days follow each other in random order
+#
+#
+# Notes and Usage Ideas
+# ---------------------
+#
+#  - To create a fixed "moon phase" calendar use 'day-order: universal'
+#    with a calendar that has multiple of eight (8, 16, 24, ...) number of days.
+#
+#  - To create a simple procedure that is guaranteed to proceed in a linear
+#    order use 'day-order: linear'.
+#
+#  - To create a random set of events use 'day-order: random'.
+#
+#  - In 'day-order: universal' days are guaranteed to be a day long, but
+#    in 'linear' and 'random' mode days can actually be much shorter if
+#    you use the 'day-begins' property creatively.
+
+MonsterMoon:
+  day-begins: 3000
+  day-order: universal
+  difficulty: normal
+  spawn-monsters: false
+  spawn-animals: true
+  pvp: true
+  commands-on-enable:
+  - say Enabled.
+  - tell Player1 You are my hero!
+  commands-on-disable:
+  - tell Player1 Good bye, darling!
+  - say Disabled.
+
+  calendar:
+
+    Full Moon:
+      spawn-monsters: true
+      difficulty: hard
+      commands:
+      - say Full Moon!
+
+    Waning Gibbous:
+      spawn-monsters: true false no-change
+      difficulty: no-change normal
+      commands:
+      - say Waning Gibbous!
+
+    Last Quarter:
+      spawn-monsters: true false no-change
+      commands:
+      - say Last Quarter!
+
+    Waning Crescent:
+      spawn-monsters: true false
+      commands:
+      - say Waning Crescent!
+
+    New Moon:
+      difficulty: easy
+      commands:
+      - say New Moon!
+
+    Waxing Crescent:
+      spawn-monsters: true false
+      difficulty: normal
+      commands:
+      - say Waxing Crescent!
+
+    First Quarter:
+      spawn-monsters: true false no-change
+      commands:
+      - say First Quarter!
+
+    Waxing Gibbous:
+      spawn-monsters: true false no-change
+      commands:
+      - say Waxing Gibbous!

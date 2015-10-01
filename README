@@ -1,0 +1,260 @@
+== MonsterMoon Extended ==
+
+MonsterMoon Extended is an extension of the MonsterMoon plugin, adding a new
+command to the plugin (/monstermoon calendar).
+
+In NetHack moon phases affect the environment -- and with this plugin that can
+happen in Minecraft too!
+
+With this small plugin you can:
+* Create custom size calendars and simple linear procedures for each of your
+worlds.
+* Calendar that has multiple of eight (8, 16, 24, ...) number of days can be
+linked to the moon phases.
+* Set difficulty levels, PVP, spawning, and run custom commands on per-day and
+per-world level.
+* Create a set of totally random events!
+* Create an //once in a blue moon// event, that happens both very rarely and
+very predictably (if you count the days...)
+
+A simple example:
+<<code yaml>>
+WorldName:                        # On this world...
+  day-begins: dawn                # ... days will change when the sun rises.
+
+  commands-on-enable:
+  - say MonsterMoon is now activated for world "WorldName"!
+
+  commands-on-disable:
+  - say Server level defaults are automatically restored!
+
+  spawn-monsters: false           # In this world monsters do not normally
+				  # spawn...
+
+  calendar:
+
+    Monday:
+      spawn-monsters: true        # ... except on Mondays, and on Tuesdays...
+
+    Tuesday:
+      spawn-monsters: true false  # ... there is 50 % possibility of monsters.
+
+    Wednesday: void               # World level defaults are restored on
+				  # Wednesday.
+
+    Thursday:
+      commands:
+      - say This command is run when Thursday begins.
+
+    Friday:
+      pvp: true                   # This setting overdrives the server default.
+
+    Saturday: void                # Defaults are restored.
+
+    Sunday: void                  # And defaults here too.
+<</code>>
+
+=== Installation ===
+
+Installation is done [[http://wiki.bukkit.org/Installing_Plugins|the usual way]]
+, just drop the //MonsterMoon.jar// into the //plugins// directory and
+///reload// server plugins.
+
+Configuration is done via the //plugins/MonsterMoon/config.yml// file. When you
+run MonsterMoon the first time it will create an example configuration file that
+you can edit.
+
+=== Format of the //config.yml// ===
+<<code yaml>>
+WorldName:                  # Name of the world where the following rules apply:
+
+  [properties]              # Default properties for this world. (See the list
+			    # below.)
+
+  commands[-on-enable]:     # Commands that are executed when MonsterMoon is
+			    # being enabled.
+  - say MonsterMoon is on!
+  - tell Player1 Hello!
+
+  commands-on-disable:      # Commands that are executed when MonsterMoon is
+			    # being disabled.
+  - tell Player1 Bye!
+  - say MonsterMoon is off!
+
+  day-begins: midnight      # Time when day is considered changed. (See values
+			    # below.)
+  day-order: universal      # In which order the following calendar days are
+			    # applied. (See values below.)
+
+  calendar:                 # This world has the following calendar days:
+
+    Monday:                 # Name for this day
+      [properties]          # Properties for this day. (See the list below.)
+      commands:             # Commands that are executed on this day.
+      - say It's Monday.
+
+    Tuesday:
+      [properties]
+      commands:
+      - say It's Tuesday.
+
+    [...]
+<</code>>
+
+==== Note ====
+You can create empty (nothing but default values) calendar days, but due to the
+//YAML// format each day must have some content. Use something like the
+following to create days that do not have any events:
+
+<<code yaml>>
+  calendar:
+    Monday: void
+    Tuesday: still nothing  # (It does not actually matter what is written
+			    # here.)
+    Wednesday: _
+<</code>>
+
+=== Possible [properties] are ===
+
+<<code yaml>>
+  difficulty:
+    [Number]        # number in range [0..3]
+    peaceful        # same as 0
+    easy            # same as 1
+    normal          # same as 2
+    hard            # same as 3
+    default         # use default value (for this world)
+    server-default  # use default value (for this server)
+    no-change       # preserve the current value
+
+  spawn-monsters:
+  spawn-animals:
+  pvp:
+    true            # property is active
+    false           # property is not active
+    default         # use default value (for this world)
+    server-default  # use default value (for this server)
+    no-change       # preserve the current value
+<</code>>
+
+These properties are set by per-world and per-day basis and will override the
+values set in the //server.properties// file.
+
+==== Scope ====
+
+If property is **not** defined for a calendar day, a world default value will be
+used instead. For example:
+<<code yaml>>
+  SomeWorld:
+    spawn-monsters: false      # Monsters do not usually spawn on SomeWorld
+    calendar:
+
+      Monday:
+        spawn-monsters: true   # Monsters will spawn on Monday
+
+      Tuesday: void            # Monsters will NOT spawn on Tuesday, because
+                               # SomeWorld default is false
+      Wednesday: void
+<</code>>
+
+If you want properties to propagate you have to set either Tuesday or the world
+default to //no-change//. For example:
+<<code yaml>>
+  SomeWorld:
+    spawn-monsters: no-change  # Leave values as-is (initially use server
+			       # default)
+    calendar:
+
+      Monday:
+        spawn-monsters: true   # Monsters will spawn on Monday
+
+      Tuesday: void            # Monsters will spawn on Tuesday!
+
+      Wednesday: void
+<</code>>
+
+==== To randomize properties ====
+
+You can randomize properties by introducing multiple possible values on the same
+line.
+
+Example:
+<<code yaml>>
+  spawn-monsters: no-change no-change false  # There is 33.33% possibility
+                                             # that monster spawning will cease.
+<</code>>
+
+=== Possible values for //day-begins// are ===
+<<code yaml>>
+  day-begins:
+    [Number]          # The actual time of day.
+    midnight          # same as -6000
+    sunrise           # same as 0
+    midday            # same as 6000
+    sunset            # same as 12000
+<</code>>
+Example:
+<<code yaml>>
+  day-begins: 9000    # Day will change at 3 o'clock in the afternoon.
+<</code>>
+
+==== Technical details ====
+
+Negative numbers are allowed because the actual time is calculated as a
+//delta// to the world.getFullTime(). This means that numbers over 24000 are
+also allowed.
+
+Example:
+<<code yaml>>
+  day-begins: 6000
+
+  When Monday begins the time is:
+    world.getFullTime() == 222000, world.getTime() == 6000
+
+  Tuesday is now scheduled to begin at:
+    (222000 - (222000 % 24000) + 24000) + 6000 == 246000
+                                          ^ 'day-begins' delta
+<</code>>
+
+=== Possible values for //day-order// are ===
+
+<<code yaml>>
+  day-order:
+    universal       # The next day will be determined from the global time
+    linear          # First day of the calendar is always executed first
+    random          # Days follow each other in random order
+<</code>>
+
+==== Notes and Usage Ideas ====
+
+* To create a fixed "moon phase" calendar use //day-order: universal// with a
+calendar that has multiple of eight (8, 16, 24, ...) number of days.
+* To create a simple procedure that is guaranteed to proceed in a linear order
+use //day-order: linear//.
+* To create a random set of events use //day-order: random//.
+* In //day-order: universal// days are guaranteed to be a day long, but in
+//linear// and //random// mode days can actually be much shorter if you use the
+//day-begins// property creatively.
+
+=== About /time ===
+
+Using ///time add// or ///time set// throws MonsterMoon out of sync. You can
+either wait the problem to solve itself (it will), or fix it manually by
+stopping and restarting MonsterMoon calendar:
+
+ * Stop MonsterMoon in world "WorldName": ///monstermoon WorldName stop//
+ * Add some time: ///time add 10000//
+ * Restart MonsterMoon in world "WorldName": ///monstermoon WorldName start//
+
+=== Compatibility ===
+
+Compiled with Oracle Java 1.7.0_21 against Bukkit 1.5.2-R0.1 API.
+
+=== License ===
+
+Public Domain ([[http://creativecommons.org/publicdomain/zero/1.0/|Creative
+Commons Zero]])
+
+=== Source Code ===
+
+Included in the //MonsterMoon_Extended.jar// package.

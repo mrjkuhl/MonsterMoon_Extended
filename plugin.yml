@@ -1,0 +1,33 @@
+name: MonsterMoon-Extended
+main: fi.nimbus.bukkit.plugin.monstermoon.MonsterMoon
+version: 0.1
+description: An extended version of the MonsterMoon plugin
+author: mrjkuhl
+commands:
+  monstermoon:
+    aliases: mm
+    description: Control MonsterMoon plugin
+    usage: /monstermoon WorldName [calendar|status|start|stop]
+permissions:
+  #
+  #  Permissions are designed to be used on per-world level, fex.:
+  #    monstermoon.status.WorldName: true   # Allow player to see WorldName status
+  #
+  monstermoon.calendar.*:
+    description: View calendar for this world
+  monstermoon.status.*:
+    description: View world status
+  monstermoon.start.*:
+    description: Start MonsterMoon calendar
+  monstermoon.stop.*:
+    description: Stop MonsterMoon calendar
+  monstermoon.debug:
+    description: Dump debug information into console
+  monstermoon.*:
+    description: Gives access to all MonsterMoon commands in all worlds
+    children:
+      monstermoon.calendar.*: true
+      monstermoon.status.*: true
+      monstermoon.start.*: true
+      monstermoon.stop.*: true
+      monstermoon.debug: true

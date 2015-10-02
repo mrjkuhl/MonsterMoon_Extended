@@ -1,8 +1,10 @@
 #!/usr/bin/make -f
 
+SOURCE_DIR= src/
+
 all:
-	cd src/ && $(MAKE)
+	cd $(SOURCE_DIR) && $(MAKE)
 
 .PHONY : clean
 clean :
-	cd src/ && $(MAKE) clean
+	cd $(SOURCE_DIR) && $(MAKE) clean

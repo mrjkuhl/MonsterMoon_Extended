@@ -26,9 +26,13 @@ public class Command implements org.bukkit.command.CommandExecutor {
         int argsIndex = 0;
         World world = null;
 
+	if (argsIndex >= args.length) {
+
+	  return false;
+	}
+
         // Command: "debug"
         if (
-	  argsIndex < args.length &&
 	  args[0].equals("debug") &&
 	  checkPermissions(sender, "debug")
 	) {
@@ -43,7 +47,13 @@ public class Command implements org.bukkit.command.CommandExecutor {
 	) {
 
 	  world = plugin.getWorld(((org.bukkit.entity.Player) sender).getWorld().getName());
+
  	}
+
+	else if (world != null) {
+
+	  argsIndex++;
+	}
 
 	else if ( !(sender instanceof org.bukkit.entity.Player) ) {
 
@@ -59,16 +69,22 @@ public class Command implements org.bukkit.command.CommandExecutor {
             case "start":
               if (checkPermissions(sender, world.getName(), "start")) {
                 onStart(sender, world);
+
+		break;
               }
 
             case "stop":
               if (checkPermissions(sender, world.getName(), "stop")) {
                 onStop(sender, world);
+
+		break;
               }
 
             case "status":
               if (checkPermissions(sender, world.getName(), "status")) {
                 onStatus(sender, world);
+
+		break;
               }
 
             default:
@@ -76,9 +92,14 @@ public class Command implements org.bukkit.command.CommandExecutor {
                 +"' (Note: Commands are case sensitive)");
               return false;
           }
+
+          return true;
         }
 
-        return true;
+	else {
+
+	  return false;
+	}
     }
 
     /**

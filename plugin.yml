@@ -7,14 +7,12 @@ commands:
   monstermoon:
     aliases: mm
     description: Control MonsterMoon plugin
-    usage: /monstermoon WorldName [calendar|status|start|stop]
+    usage: /monstermoon WorldName [status|start|stop]
 permissions:
   #
   #  Permissions are designed to be used on per-world level, fex.:
   #    monstermoon.status.WorldName: true   # Allow player to see WorldName status
   #
-  monstermoon.calendar.*:
-    description: View calendar for this world
   monstermoon.status.*:
     description: View world status
   monstermoon.start.*:

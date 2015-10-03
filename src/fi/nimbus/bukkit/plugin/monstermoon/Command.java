@@ -27,57 +27,57 @@ public class Command implements org.bukkit.command.CommandExecutor {
         World world = null;
 
         // Command: "debug"
-        if (argsIndex < args.length && args[0].equals("debug") && checkPermissions(sender, "debug")) {
+        if (
+	  argsIndex < args.length &&
+	  args[0].equals("debug") &&
+	  checkPermissions(sender, "debug")
+	) {
+
             onPrintDebugInfo(sender);
             return true;
         }
 
-        // If first argument is world name, use it
-        if (argsIndex < args.length) {
-            world = plugin.getWorld(args[argsIndex]);
-            if (world != null) ++argsIndex;
-        }
+	if (
+	  (world = plugin.getWorld(args[argsIndex])) == null &&
+	  sender instanceof org.bukkit.entity.Player
+	) {
 
-        // If no world is defined and sender is a player, use his/hers world
-        if (world == null && sender instanceof org.bukkit.entity.Player) {
-            world = plugin.getWorld(((org.bukkit.entity.Player) sender).getWorld().getName());
-        }
+	  world = plugin.getWorld(((org.bukkit.entity.Player) sender).getWorld().getName());
+ 	}
 
-        // Still no world? Return an error message
-        if (world == null) {
-            sender.sendMessage(org.bukkit.ChatColor.RED
-                               +"Please specify WorldName (Note: WorldName is case sensitive)");
-            return false;
-        }
+	else if ( !(sender instanceof org.bukkit.entity.Player) ) {
+
+          sender.sendMessage(org.bukkit.ChatColor.RED
+            +"Please specify WorldName (Note: WorldName is case sensitive)");
+          return false;
+	}
 
         // If we have command, process it
         if (argsIndex < args.length) {
-            switch (args[argsIndex]) {
-                case "start":
-                    if (checkPermissions(sender, world.getName(), "start")) {
-                        onStart(sender, world);
-                    }
-                    return true;
+          switch (args[argsIndex]) {
 
-                case "stop":
-                    if (checkPermissions(sender, world.getName(), "stop")) {
-                        onStop(sender, world);
-                    }
-                    return true;
+            case "start":
+              if (checkPermissions(sender, world.getName(), "start")) {
+                onStart(sender, world);
+              }
 
-                case "status": break;
+            case "stop":
+              if (checkPermissions(sender, world.getName(), "stop")) {
+                onStop(sender, world);
+              }
 
-                default:
-                    sender.sendMessage(org.bukkit.ChatColor.RED + "Unknown command '"+ args[argsIndex]
-                                       +"' (Note: Commands are case sensitive)");
-                    return false;
-            }
+            case "status":
+              if (checkPermissions(sender, world.getName(), "status")) {
+                onStatus(sender, world);
+              }
+
+            default:
+              sender.sendMessage(org.bukkit.ChatColor.RED + "Unknown command '"+ args[argsIndex]
+                +"' (Note: Commands are case sensitive)");
+              return false;
+          }
         }
 
-        // Command: "status"
-        if (checkPermissions(sender, world.getName(), "status")) {
-            onStatus(sender, world);
-        }
         return true;
     }
 

@@ -74,6 +74,14 @@ public class Command implements org.bukkit.command.CommandExecutor {
 
 	      break;
 
+	    case "calendar":
+
+	      if (checkPermissions(sender, world.getName(), "calendar")) {
+		onCalendar(sender, world);
+	      }
+
+	      break;
+
             case "start":
               if (checkPermissions(sender, world.getName(), "start")) {
                 onStart(sender, world);
@@ -144,6 +152,35 @@ public class Command implements org.bukkit.command.CommandExecutor {
 
       stringbuilder.append("Today is " + currentDay.getName() +
 	", at " + time(time) + " o'clock.");
+
+      sender.sendMessage(org.bukkit.ChatColor.GREEN.toString() + stringbuilder);
+    }
+
+    private void onCalendar(final org.bukkit.command.CommandSender sender, final World world) {
+
+      final StringBuilder stringbuilder = new StringBuilder();
+
+      final Calendar calendar = world.getCalendar();
+      final Day[] days = calendar.getDays();
+      Properties properties;
+
+      int i = 0;
+
+      for (Day day: days) {
+
+	properties = day.getProperties();
+
+	stringbuilder.append(day.getName() + " - " +
+	  "Difficulty: " + properties.getDifficulty().toString() + ", " +
+	  "Monsters: " + properties.getSpawnMonsters().toString() + ", " +
+	  "Animals: " +properties.getSpawnAnimals().toString() + ", " +
+	  "PVP: " + properties.getPVP().toString());
+
+	if (++i != days.length) {
+
+	  stringbuilder.append("\n");
+	}
+      }
 
       sender.sendMessage(org.bukkit.ChatColor.GREEN.toString() + stringbuilder);
     }

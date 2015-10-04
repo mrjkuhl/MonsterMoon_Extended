@@ -15,6 +15,8 @@ permissions:
   #
   monstermoon.today.*:
     description: Show the current day
+  monstermoon.calendar.*:
+    description: Show all days, and their effects
   monstermoon.status.*:
     description: View world status
   monstermoon.start.*:

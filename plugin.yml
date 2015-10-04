@@ -13,6 +13,8 @@ permissions:
   #  Permissions are designed to be used on per-world level, fex.:
   #    monstermoon.status.WorldName: true   # Allow player to see WorldName status
   #
+  monstermoon.today.*:
+    description: Show the current day
   monstermoon.status.*:
     description: View world status
   monstermoon.start.*:
@@ -24,6 +26,7 @@ permissions:
   monstermoon.*:
     description: Gives access to all MonsterMoon commands in all worlds
     children:
+      monstermoon.today.*: true
       monstermoon.calendar.*: true
       monstermoon.status.*: true
       monstermoon.start.*: true

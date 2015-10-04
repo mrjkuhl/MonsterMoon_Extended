@@ -66,6 +66,14 @@ public class Command implements org.bukkit.command.CommandExecutor {
         if (argsIndex < args.length) {
           switch (args[argsIndex]) {
 
+	    case "today":
+
+	      if (checkPermissions(sender, world.getName(), "today")) {
+		onToday(sender, world);
+	      }
+
+	      break;
+
             case "start":
               if (checkPermissions(sender, world.getName(), "start")) {
                 onStart(sender, world);
@@ -124,6 +132,20 @@ public class Command implements org.bukkit.command.CommandExecutor {
             return false;
         }
         return true;
+    }
+
+    private void onToday(final org.bukkit.command.CommandSender sender, final World world) {
+
+      final StringBuilder stringbuilder = new StringBuilder();
+
+      final Calendar calendar = world.getCalendar();
+      final long time = world.getTime();
+      final Day currentDay = calendar.getCurrentDay();
+
+      stringbuilder.append("Today is " + currentDay.getName() +
+	", at " + time(time) + " o'clock.");
+
+      sender.sendMessage(org.bukkit.ChatColor.GREEN.toString() + stringbuilder);
     }
 
     /**

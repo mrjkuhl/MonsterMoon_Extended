@@ -147,11 +147,9 @@ public class Command implements org.bukkit.command.CommandExecutor {
       final StringBuilder stringbuilder = new StringBuilder();
 
       final Calendar calendar = world.getCalendar();
-      final long time = world.getTime();
       final Day currentDay = calendar.getCurrentDay();
 
-      stringbuilder.append("Today is " + currentDay.getName() +
-	", at " + time(time) + " o'clock.");
+      stringbuilder.append(currentDay.getPropertiesDetails());
 
       sender.sendMessage(org.bukkit.ChatColor.GREEN.toString() + stringbuilder);
     }

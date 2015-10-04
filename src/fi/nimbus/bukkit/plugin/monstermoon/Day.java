@@ -44,6 +44,19 @@ public class Day {
         return commands;
     }
 
+    public String getPropertiesDetails() {
+
+      String propertiesString = new String();
+
+      propertiesString = name + " - Difficulty: " +
+        properties.getDifficulty().toString() + ", " + "Monsters: " +
+        properties.getSpawnMonsters().toString() + ", " + "Animals: " +
+        properties.getSpawnAnimals().toString() + ", " + "PVP: " +
+        properties.getPVP().toString();
+
+      return propertiesString;
+    }
+
     /**
      *  @return (Relative) time when this day begins
      */

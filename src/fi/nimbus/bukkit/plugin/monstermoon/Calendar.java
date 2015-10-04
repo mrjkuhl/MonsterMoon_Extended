@@ -214,6 +214,10 @@ public class Calendar extends org.bukkit.scheduler.BukkitRunnable {
         }
     }
 
+    public Day[] getDays() {
+
+      return days;
+    }
     /**
      *  @return Number of days in this list
      */

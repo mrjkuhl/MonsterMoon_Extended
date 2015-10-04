@@ -2,7 +2,7 @@ name: MonsterMoon-Extended
 main: fi.nimbus.bukkit.plugin.monstermoon.MonsterMoon
 version: 0.1
 description: An extended version of the MonsterMoon plugin
-author: mrjkuhl
+authors: [tero.niemi@nimbus.fi, mrjkuhl]
 commands:
   monstermoon:
     aliases: mm

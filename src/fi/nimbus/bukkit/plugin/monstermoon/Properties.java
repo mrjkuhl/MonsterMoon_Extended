@@ -62,6 +62,26 @@ public class Properties extends java.util.HashMap<String,Property> {
                       (DayBegins) worldDefaults.get(DayBegins.NAME)));
     }
 
+    public Property getDifficulty() {
+
+      return get("difficulty");
+    }
+
+    public Property getSpawnMonsters() {
+
+      return get("spawn-monsters");
+    }
+
+    public Property getSpawnAnimals() {
+
+      return get("spawn-animals");
+    }
+
+    public Property getPVP() {
+
+      return get("pvp");
+    }
+
     /**
      *  Add property to group
      *  @return Possible previous value of the property, null if none

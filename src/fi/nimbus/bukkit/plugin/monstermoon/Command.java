@@ -168,13 +168,7 @@ public class Command implements org.bukkit.command.CommandExecutor {
 
       for (Day day: days) {
 
-	properties = day.getProperties();
-
-	stringbuilder.append(day.getName() + " - " +
-	  "Difficulty: " + properties.getDifficulty().toString() + ", " +
-	  "Monsters: " + properties.getSpawnMonsters().toString() + ", " +
-	  "Animals: " +properties.getSpawnAnimals().toString() + ", " +
-	  "PVP: " + properties.getPVP().toString());
+	stringbuilder.append(day.getPropertiesDetails());
 
 	if (++i != days.length) {
 

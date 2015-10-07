@@ -1,0 +1,7 @@
+
+0.2
+---
+
+- Added today command (/monstermoon <world> today).
+- Added calendar command (/monstermoon <world> calendar).
+- Reworked Command.onCommand().

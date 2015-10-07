@@ -253,9 +253,8 @@ Compiled with Oracle Java 1.7.0_21 against Bukkit 1.5.2-R0.1 API.
 
 === License ===
 
-Public Domain ([[http://creativecommons.org/publicdomain/zero/1.0/|Creative
-Commons Zero]])
+GPLv3. See the COPYING file.
 
 === Source Code ===
 
-Included in the //MonsterMoon_Extended.jar// package.
+May be found at https://github.com/mrjkuhl/MonsterMoon_Extended

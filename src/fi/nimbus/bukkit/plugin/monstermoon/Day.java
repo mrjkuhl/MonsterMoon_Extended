@@ -11,6 +11,9 @@ public class Day {
     private final String[]   commands;
     private final int        begins;
 
+    private final int        date;
+    private final float      chance;
+
     /**
      *  Compile day pointed by Configuration Section by using the defaults from the calendar
      */
@@ -21,6 +24,9 @@ public class Day {
                                     calendar.getWorld().getServerDefaults());
         commands = (cfg == null) ? new String[0] : cfg.getStringList("commands").toArray(new String[0]);
         begins = ((DayBegins) properties.get(DayBegins.NAME)).getValue();
+
+	date = cfg.getInt("date");
+	chance = cfg.getInt("chance") / 100;
     }
 
     /**

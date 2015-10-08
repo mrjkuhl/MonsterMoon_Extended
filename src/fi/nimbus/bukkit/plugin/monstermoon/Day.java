@@ -26,7 +26,7 @@ public class Day {
         begins = ((DayBegins) properties.get(DayBegins.NAME)).getValue();
 
 	date = cfg.getInt("date");
-	chance = cfg.getInt("chance") / 100;
+	chance = (float) cfg.getInt("chance") / 100;
     }
 
     /**

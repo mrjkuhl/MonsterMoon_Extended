@@ -5,7 +5,7 @@ JCFLAGS= -cp
 ARC= jar
 ARCFLAGS= cvf
 
-MISC_FILES= ../config.yml ../COPYING ../plugin.yml ../README
+MISC_FILES= ../CHANGELOG ../config.yml ../COPYING ../plugin.yml ../README
 
 PACKAGE_DIR= fi/nimbus/bukkit/plugin/monstermoon
 PROPERTIES_DIR= /properties

@@ -36,6 +36,15 @@ public class Day {
         return name;
     }
 
+    public int getDate() {
+
+      return this.date;
+    }
+
+    public float getChance() {
+
+      return this.chance;
+    }
     /**
      *  @return Properties of this day
      */

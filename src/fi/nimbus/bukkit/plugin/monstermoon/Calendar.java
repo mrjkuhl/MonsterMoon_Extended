@@ -13,6 +13,7 @@ public class Calendar extends org.bukkit.scheduler.BukkitRunnable {
     protected final World   world;
     protected final Day[]   days;
     private final DayOrder  dayOrder;
+    private final int       calendarLength;
 
     private int             currentDay;
     private int             nextDay;
@@ -26,9 +27,13 @@ public class Calendar extends org.bukkit.scheduler.BukkitRunnable {
     public Calendar(final World world) {
         this.world = world;
         taskID = -1;
+        calendarLength =
+          world.getPlugin().getConfig().getInt(world.getName() +
+          ".calendar-length");
 
         org.bukkit.configuration.ConfigurationSection cfg =
-                world.getPlugin().getConfig().getConfigurationSection(world.getName() +".calendar");
+          world.getPlugin().getConfig().getConfigurationSection(world.getName() + ".calendar");
+
 
         // No calendar days == inactive calendar
         java.util.Set<String> dayNames;

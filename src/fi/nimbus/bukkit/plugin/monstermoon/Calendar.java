@@ -59,6 +59,11 @@ public class Calendar extends org.bukkit.scheduler.BukkitRunnable {
         nextDay = STOPPED;
     }
 
+    public int getCalendarLength() {
+
+      return calendarLength;
+    }
+
     /**
      *  @return Bound day index
      */

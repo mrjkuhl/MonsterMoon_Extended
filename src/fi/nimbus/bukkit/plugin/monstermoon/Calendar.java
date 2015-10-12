@@ -12,6 +12,10 @@ public class Calendar extends org.bukkit.scheduler.BukkitRunnable {
 
     protected final World   world;
     protected final Day[]   days;
+    protected final Day[]   randomDays;
+
+    protected final HashMap<Integer, Day>   scheduledDays;
+
     private final DayOrder  dayOrder;
     private final int       calendarLength;
 
@@ -46,10 +50,29 @@ public class Calendar extends org.bukkit.scheduler.BukkitRunnable {
 
         // Add days to the array
         java.util.List<Day> days = new java.util.ArrayList<Day>();
+        java.util.List<Day> randomDays = new java.util.ArrayList<Day>();
+
         for (String name : dayNames) {
-            days.add(new Day(this, name, cfg.getConfigurationSection(name)));
+
+            day = new Day(this, name, cfg.getConfigurationSection(name));
+
+            if (day.getDate() > 0) {
+
+              this.scheduledDays.put(day.getDate(), day);
+            }
+
+            else if (day.getChance() > 0.0) {
+
+              randomDays.add(day);
+            }
+
+            else {
+
+              days.add(day);
+            }
         }
         this.days = days.toArray(new Day[0]);
+        this.randomDays = randomDays.toArray(new Day[0]);
 
         // Order of days
         dayOrder = (DayOrder) world.getWorldDefaults().get(DayOrder.NAME);

@@ -14,7 +14,7 @@ public class Calendar extends org.bukkit.scheduler.BukkitRunnable {
     protected final Day[]   days;
     protected final Day[]   randomDays;
 
-    protected final HashMap<Integer, Day>   scheduledDays;
+    protected final java.util.HashMap<Integer, Day>   scheduledDays;
 
     private final DayOrder  dayOrder;
     private final int       calendarLength;
@@ -31,6 +31,8 @@ public class Calendar extends org.bukkit.scheduler.BukkitRunnable {
     public Calendar(final World world) {
         this.world = world;
         taskID = -1;
+        scheduledDays = new java.util.HashMap<Integer, Day>();
+
         calendarLength =
           world.getPlugin().getConfig().getInt(world.getName() +
           ".calendar-length");
@@ -43,6 +45,7 @@ public class Calendar extends org.bukkit.scheduler.BukkitRunnable {
         java.util.Set<String> dayNames;
         if (cfg == null || (dayNames = cfg.getKeys(false)) == null) {
             days = new Day[0];
+            randomDays = new Day[0];
             dayOrder = new DayOrder(null);
             nextDay = INACTIVE;
             return;
@@ -51,6 +54,7 @@ public class Calendar extends org.bukkit.scheduler.BukkitRunnable {
         // Add days to the array
         java.util.List<Day> days = new java.util.ArrayList<Day>();
         java.util.List<Day> randomDays = new java.util.ArrayList<Day>();
+        Day day;
 
         for (String name : dayNames) {
 
